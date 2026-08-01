@@ -8,7 +8,7 @@ Instead of just printing ASCII characters to the console, this program processes
 
 | Original GIF | ASCII Art Result |
 | :---: | :---: |
-| <img src="giphy.gif" width="400"/> | <img src="build/output.gif" width="400"/> |
+| <img src="giphy.gif" width="400"/> | <img src="output.gif" width="400"/> |
 
 *(Font used in demonstration: `Mx437_IBM_BIOS.ttf`)*
 
