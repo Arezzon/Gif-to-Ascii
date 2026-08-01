@@ -31,3 +31,21 @@ sudo apt update
 sudo apt install build-essential cmake pkg-config \
                  libavformat-dev libavcodec-dev libavutil-dev libswscale-dev \
                  libsfml-dev
+```
+
+## Build on Linux
+
+After installing the dependencies, configure and build the project with CMake:
+
+```bash
+cmake -S . -B build
+cmake --build build -j
+```
+
+## Run
+
+If the build succeeds, run the executable from the build directory:
+
+```bash
+./build/gif2ascii
+```
