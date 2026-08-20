@@ -12,7 +12,7 @@ Instead of just printing ASCII characters to the console, this program processes
 
 *(Font used in demonstration: `Mx437_IBM_BIOS.ttf`)*
 
-## ✨ Features
+## Features
 
 * **Native FFmpeg Integration:** Uses `libavcodec` and `libavformat` for fast, low-level video decoding and encoding.
 * **Smart Scaling:** Utilizes `libswscale` to downsample frames into a grid (e.g., 100x100 characters) while preserving grayscale brightness data.
@@ -20,7 +20,7 @@ Instead of just printing ASCII characters to the console, this program processes
 * **Dynamic Frame Rate:** Automatically detects the original GIF's FPS and applies the exact same framerate to the output file.
 * **RAII Architecture:** Clean, memory-safe OOP design in C++ preventing memory leaks during complex FFmpeg buffer operations.
 
-## 🛠️ Prerequisites
+## Prerequisites
 
 To build and run this project, you need **CMake**, a C++17 compiler, **FFmpeg** libraries, and **SFML**. 
 
