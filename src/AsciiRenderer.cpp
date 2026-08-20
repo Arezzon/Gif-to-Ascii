@@ -1,5 +1,6 @@
 #include "AsciiRenderer.hpp"
 #include <iostream>
+#include <SFML/Config.hpp>
 
 using namespace std;
 
@@ -17,7 +18,11 @@ AsciiRenderer::~AsciiRenderer() {
 
 bool AsciiRenderer::init(const std::string& font_path, int font_size) {
     m_font_size = font_size;
+#if SFML_VERSION_MAJOR >= 3
+    if (!font.openFromFile(font_path)) {
+#else
     if (!font.loadFromFile(font_path)) {
+#endif
         cerr << "Failed loaf font form: " << font_path << endl;
         return false;
     }
@@ -29,8 +34,11 @@ bool AsciiRenderer::init(const std::string& font_path, int font_size) {
 
     pixel_width = cols_count * char_width;
     pixel_height = rows_count * char_height;
-
+#if SFML_VERSION_MAJOR >= 3
+    if (!render_texture.resize(sf::Vector2u(pixel_width, pixel_height))) {
+#else
     if (!render_texture.create(pixel_width, pixel_height)) {
+#endif
         cerr << "Failed to create render texture!" << endl;
         return false;
     }
@@ -56,11 +64,15 @@ AVFrame* AsciiRenderer::renderer_frame(AVFrame* gray_frame) {
     // Black Background
     render_texture.clear(sf::Color::Black);
 
+#if SFML_VERSION_MAJOR >= 3
+    sf::Text text(font, "", m_font_size);
+    text.setFillColor(sf::Color::White);
+#else
     sf::Text text;
     text.setFont(font);
     text.setCharacterSize(m_font_size);
     text.setFillColor(sf::Color::White);
-
+#endif
     float char_width = pixel_width / (float) cols_count;
     float char_height = pixel_height/ (float) rows_count;
 
@@ -71,7 +83,11 @@ AVFrame* AsciiRenderer::renderer_frame(AVFrame* gray_frame) {
             int char_idx = (pixel_value * (ascii_chars.length() - 1)) / 255; // map
 
             text.setString(std::string(1, ascii_chars[char_idx]));
+#if SFML_VERSION_MAJOR >= 3
+            text.setPosition(sf::Vector2f(x * char_width, y * char_height));
+#else
             text.setPosition(x * char_width, y * char_height);
+#endif
 
             render_texture.draw(text);
         }
