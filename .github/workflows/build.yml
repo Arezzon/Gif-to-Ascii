@@ -1,0 +1,80 @@
+name: Build and Upload Artifacts
+
+on:
+    push:
+        branches: ["main", "master"]
+    pull_request:
+        branches: ["main", "master"]
+    workflow_dispatch:
+
+jobs:
+    build-linux:
+        name: Build on Linux (Ubuntu)
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Install Dependencies
+              run: |
+                sudo apt-get update
+                sudo apt-get install -y build-essential cmake pkg-config \
+                libavformat-dev libavcodec-dev libavutil-dev libswscale-dev \
+                libsfml-dev
+            
+            - name: Configure CMake
+              run: cmake -S . -B build  
+
+
+            - name: Build CMake
+              run: cmake --build build -j4 #4 threads - faster
+            
+            - name: Upload Linux Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: gif2ascii-linux
+                path: build/gif2ascii
+
+    build-windows:
+        name: Build on Windows (MSYS2)
+        runs-on: windows-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            
+            - name: Setup MSYS2
+              uses: msys2/setup-msys2@v2
+              with:
+                msystem: UCRT64
+                update: true
+                install: >-
+                    mingw-w64-ucrt-x86_64-gcc
+                    mingw-w64-ucrt-x86_64-cmake
+                    mingw-w64-ucrt-x86_64-pkgconf
+                    mingw-w64-ucrt-x86_64-ffmpeg
+                    mingw-w64-ucrt-x86_64-sfml
+            
+            - name: Build
+              shell: msys2 {0}
+              run: |
+                cmake -S . -B build -G "MinGW Makefiles"
+                cmake --build build -j4
+            
+            - name: Package Windows Release 
+              shell: msys2 {0}
+              run: |
+                mkdir -p release_windows
+                cp build/gif2ascii.exe release_windows/
+                ldd build/gif2ascii.exe | grep -i '/ucrt64/.*\.dll' | awk '{print $3}' | xargs -I '{}' cp "{}" release_windows/
+                cp giphy.gif release_windows/ 2>/dev/null || true
+                cp Mx437_IBM_BIOS.ttf release_windows/ 2>/dev/null || true
+            
+            - name: Upload Windows Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: gif2ascii-windows
+                path: release_windows/
+            
+
+
+
