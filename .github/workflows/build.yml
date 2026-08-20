@@ -33,18 +33,18 @@ jobs:
               run: |
                 wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
                 chmod +x linuxdeploy-x86_64.AppImage
-                mkdir -p AppDir/usr/bin
-                cp build/gif2ascii AppDir/usr/bin/
 
                 echo "[Desktop Entry]
                 Name=Gif2Ascii
                 Exec=gif2ascii
-                Icon=utilities-terminal
+                Icon=gif2ascii
                 Type=Application
                 Categories=ConsoleOnly;Utility;
-                Terminal=true" > AppDir/gif2ascii.desktop
+                Terminal=true" > gif2ascii.desktop
 
-                ./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
+                convert -size 256x256 xc:black gif2ascii.png
+
+                ./linuxdeploy-x86_64.AppImage --appdir AppDir --executable build/gif2ascii --desktop-file gif2ascii.desktop --icon-file gif2ascii.png --output appimage
             
             - name: Upload Linux Artifact
               uses: actions/upload-artifact@v4
