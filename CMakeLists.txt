@@ -5,7 +5,17 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(PkgConfig REQUIRED)
-find_package(SFML COMPONENTS graphics window system REQUIRED)
+find_package(SFML QUIET COMPONENTS Graphics Window System)
+if(SFML_FOUND)
+    #Windows rolling release
+    message(STATUS "Found SFML 3+")
+    set(SFML_LIBS SFML::Graphics SFML::Window SFML::System)
+else()
+    #Stable Linux
+    find_package(SFML REQUIRED COMPONENTS graphics window system)
+    message(STATUS "Found SFML 2")
+    set(SFML_LIBS sfml-graphics sfml-window sfml-system)
+endif()
 
 pkg_check_modules(AVFORMAT REQUIRED IMPORTED_TARGET libavformat)
 pkg_check_modules(AVCODEC REQUIRED IMPORTED_TARGET libavcodec)
@@ -29,7 +39,5 @@ target_link_libraries(gif2ascii PRIVATE
     PkgConfig::AVCODEC
     PkgConfig::SWSCALE
     PkgConfig::AVUTIL
-    sfml-graphics
-    sfml-window
-    sfml-system
+    ${SFML_LIBS}
 )
