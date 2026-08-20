@@ -42,9 +42,9 @@ jobs:
                 Categories=ConsoleOnly;Utility;
                 Terminal=true" > gif2ascii.desktop
 
-                convert -size 256x256 xc:black gif2ascii.png
+                echo '<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><rect width="256" height="256" fill="black"/></svg>' > gif2ascii.svg
 
-                ./linuxdeploy-x86_64.AppImage --appdir AppDir --executable build/gif2ascii --desktop-file gif2ascii.desktop --icon-file gif2ascii.png --output appimage
+                ./linuxdeploy-x86_64.AppImage --appdir AppDir --executable build/gif2ascii --desktop-file gif2ascii.desktop --icon-file gif2ascii.svg --output appimage
             
             - name: Upload Linux Artifact
               uses: actions/upload-artifact@v4
